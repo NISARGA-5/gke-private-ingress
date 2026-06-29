@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gke-demo
+  labels:
+    app: gke-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gke-demo
+  template:
+    metadata:
+      labels:
+        app: gke-demo
+    spec:
+      containers:
+      - name: gke-demo
+        image: asia-south1-docker.pkg.dev/nisarga-499904/gke-demo/gke-demo:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
