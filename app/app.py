@@ -10,7 +10,7 @@ def home():
     return f"""
     <html>
     <head>
-        <title>Private GKE Demo</title>
+        <title>Private GKE-Demo</title>
     </head>
     <body style="font-family:Arial;text-align:center;margin-top:60px;">
         <h1> Private GKE-Demo</h1>
