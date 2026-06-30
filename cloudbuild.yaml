@@ -1,5 +1,5 @@
 steps:
-# Build Docker Image
+# Step 1: Build Docker Image
 - name: 'gcr.io/cloud-builders/docker'
   dir: 'app'
   args:
@@ -8,12 +8,13 @@ steps:
     - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
     - .
 
-# Push Docker Image
+# Step 2: Push Docker Image
 - name: 'gcr.io/cloud-builders/docker'
   args:
     - push
     - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
 
+# Step 3: Retrieve SSH Keys from Secret Manager
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: bash
   args:
@@ -28,17 +29,16 @@ steps:
       chmod 600 /workspace/id_rsa
       chmod 644 /workspace/id_rsa.pub
 
-# Deploy through Bastion
+# Step 4: Deploy to Private GKE through Bastion
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: bash
   args:
     - -c
     - |
       gcloud compute ssh bastion-vm \
-      --zone=asia-south1-a \
-      --ssh-key-file=/workspace/id_rsa \
-      --tunnel-through-iap \
-      --command="cd ~/gke-private-ingress && ./deploy.sh $SHORT_SHA"
+        --zone=asia-south1-a \
+        --ssh-key-file=/workspace/id_rsa \
+        --command="cd ~/gke-private-ingress && ./deploy.sh $SHORT_SHA"
 
 images:
 - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
