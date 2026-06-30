@@ -13,7 +13,7 @@ def home():
         <title>Private GKE Demo</title>
     </head>
     <body style="font-family:Arial;text-align:center;margin-top:60px;">
-        <h1> Private GKE Demo</h1>
+        <h1> Private GKE-Demo</h1>
         <h2>Application Running Successfully!</h2>
 
         <p><b>Version:</b> 1.0</p>
