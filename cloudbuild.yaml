@@ -1,35 +1,21 @@
 steps:
-# Build Docker image
+# Build Docker Image
 - name: 'gcr.io/cloud-builders/docker'
   dir: 'app'
   args:
-    [
-      'build',
-      '-t',
-      'asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA',
-      '.'
-    ]
+    - build
+    - -t
+    - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
+    - .
 
-# Push image to Artifact Registry
+# Push Docker Image
 - name: 'gcr.io/cloud-builders/docker'
   args:
-    [
-      'push',
-      'asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA'
-    ]
-
-# Update deployment image
-- name: 'gcr.io/cloud-builders/gke-deploy'
-  args:
-    [
-      'run',
-      '--filename=k8s',
-      '--image=asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA',
-      '--location=asia-south1-a',
-      '--cluster=private-gke'
-    ]
+    - push
+    - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
 
 images:
-- 'asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA'
+- asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
+
 options:
   logging: CLOUD_LOGGING_ONLY
