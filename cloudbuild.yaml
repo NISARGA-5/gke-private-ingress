@@ -14,16 +14,19 @@ steps:
     - push
     - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
 
-# Retrieve SSH Key
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: bash
   args:
     - -c
     - |
       gcloud secrets versions access latest \
-      --secret=cloudbuild-ssh-key > /workspace/id_rsa
+        --secret=cloudbuild-ssh-key > /workspace/id_rsa
+
+      gcloud secrets versions access latest \
+        --secret=cloudbuild-ssh-pub > /workspace/id_rsa.pub
 
       chmod 600 /workspace/id_rsa
+      chmod 644 /workspace/id_rsa.pub
 
 # Deploy through Bastion
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
