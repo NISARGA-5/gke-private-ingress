@@ -14,6 +14,29 @@ steps:
     - push
     - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
 
+# Retrieve SSH Key
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      gcloud secrets versions access latest \
+      --secret=cloudbuild-ssh-key > /workspace/id_rsa
+
+      chmod 600 /workspace/id_rsa
+
+# Deploy through Bastion
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      gcloud compute ssh bastion-vm \
+      --zone=asia-south1-a \
+      --ssh-key-file=/workspace/id_rsa \
+      --tunnel-through-iap \
+      --command="cd ~/gke-private-ingress && ./deploy.sh $SHORT_SHA"
+
 images:
 - asia-south1-docker.pkg.dev/$PROJECT_ID/gke-demo/gke-demo:$SHORT_SHA
 
