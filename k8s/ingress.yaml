@@ -5,6 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "gce"
     kubernetes.io/ingress.global-static-ip-name: "gke-demo-static-ip"
+    networking.gke.io/certmap: "nisargak-cert-map"
 spec:
   defaultBackend:
     service:
